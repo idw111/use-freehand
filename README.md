@@ -16,6 +16,8 @@ const FreehandCanvas: FC = () => {
 };
 ```
 
+[Live Demo](https://idw111.github.io/use-freehand/)
+
 ## API
 
 ```typescript
