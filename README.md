@@ -1,8 +1,12 @@
 # use-freehand
 
-> react hook to use [perfect-freehand](https://github.com/steveruizok/perfect-freehand)
+> react hook to use [perfect-freehand](https://github.com/steveruizok/perfect-freehand) with ease
 
-## usage
+## Install
+
+`npm install --save use-freehand`
+
+## Usage
 
 ```typescript
 const FreehandCanvas: FC = () => {
