@@ -1,4 +1,4 @@
-import getStroke from 'perfect-freehand';
+import getStroke, { StrokeOptions } from 'perfect-freehand';
 import { MouseEvent, RefObject, useEffect, useRef } from 'react';
 
 const average = (a: number, b: number) => (a + b) / 2;
@@ -30,8 +30,11 @@ const getSvgPathFromStroke = (points: number[][], closed = true): string => {
   return result;
 };
 
+const defaultOptions: StrokeOptions = { size: 8, thinning: 0.8 };
+
 export const useFreehand = (
-  canvasRef: RefObject<HTMLCanvasElement>
+  canvasRef: RefObject<HTMLCanvasElement>,
+  options: StrokeOptions = defaultOptions
 ): {
   reset: () => void;
   capture: () => Promise<Blob>;
@@ -52,7 +55,7 @@ export const useFreehand = (
     lastPoints.push([e.clientX, e.clientY]);
     console.log(pointsRef.current);
     const ctx = canvasRef.current.getContext('2d');
-    const strokes = getStroke(lastPoints, { size: 8, thinning: 0.8 });
+    const strokes = getStroke(lastPoints, options);
     const path = getSvgPathFromStroke(strokes);
     const myPath = new Path2D(path);
 
