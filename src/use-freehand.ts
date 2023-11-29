@@ -34,7 +34,7 @@ const defaultOptions: StrokeOptions = { size: 8, thinning: 0.8 };
 
 export const useFreehand = (
   canvasRef: RefObject<HTMLCanvasElement>,
-  options: StrokeOptions = defaultOptions
+  options?: StrokeOptions
 ): {
   reset: () => void;
   capture: () => Promise<Blob>;
@@ -55,7 +55,7 @@ export const useFreehand = (
     lastPoints.push([e.clientX, e.clientY]);
     console.log(pointsRef.current);
     const ctx = canvasRef.current.getContext('2d');
-    const strokes = getStroke(lastPoints, options);
+    const strokes = getStroke(lastPoints, { ...defaultOptions, ...options });
     const path = getSvgPathFromStroke(strokes);
     const myPath = new Path2D(path);
 

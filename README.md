@@ -18,6 +18,14 @@ const FreehandCanvas: FC = () => {
 
 ## API
 
+```typescript
+useFreehand: (canvasRef: RefObject<HTMLCanvasElement>, options?: StrokeOptions) => {
+  capture: () => Promise<Blob>;
+  getRawData: () => number[][][];
+  reset: () => void;
+};
+```
+
 - `capture: () => Promise<Blob>` captures the image on canvas
 - `getRawData: () => number[][][]` returns arrays of points
 - `reset: () => void` clears the canvas
