@@ -1,5 +1,5 @@
 import getStroke from 'perfect-freehand';
-import { MouseEvent, MutableRefObject, useEffect, useRef } from 'react';
+import { MouseEvent, RefObject, useEffect, useRef } from 'react';
 
 const average = (a: number, b: number) => (a + b) / 2;
 
@@ -30,7 +30,13 @@ const getSvgPathFromStroke = (points: number[][], closed = true): string => {
   return result;
 };
 
-export const useFreehand = (canvasRef: MutableRefObject<HTMLCanvasElement>): { reset: () => void; capture: () => Promise<Blob> } => {
+export const useFreehand = (
+  canvasRef: RefObject<HTMLCanvasElement>
+): {
+  reset: () => void;
+  capture: () => Promise<Blob>;
+  getRawData: () => number[][][];
+} => {
   const mouseStateRef = useRef<'down' | 'up'>('up');
   const pointsRef = useRef<number[][][]>([]);
   const handleMouseDown = () => {
@@ -70,7 +76,7 @@ export const useFreehand = (canvasRef: MutableRefObject<HTMLCanvasElement>): { r
     canvasRef.current.removeEventListener('mouseup', handleMouseUp);
   };
 
-  const reset = () => {
+  const reset = (): void => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     pointsRef.current = [];
@@ -92,6 +98,10 @@ export const useFreehand = (canvasRef: MutableRefObject<HTMLCanvasElement>): { r
     return blob;
   };
 
+  const getRawData = (): number[][][] => {
+    return pointsRef.current;
+  };
+
   useEffect(() => {
     if (canvasRef.current) {
       handleRegisterEventListener();
@@ -99,5 +109,5 @@ export const useFreehand = (canvasRef: MutableRefObject<HTMLCanvasElement>): { r
     }
   }, []);
 
-  return { reset, capture };
+  return { reset, capture, getRawData };
 };
