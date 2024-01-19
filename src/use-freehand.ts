@@ -49,11 +49,16 @@ export const useFreehand = (
   const handleMouseUp = () => {
     mouseStateRef.current = 'up';
   };
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent | TouchEvent) => {
     if (mouseStateRef.current === 'up') return;
+
     const lastPoints = pointsRef.current[pointsRef.current.length - 1];
-    lastPoints.push([e.clientX, e.clientY]);
-    console.log(pointsRef.current);
+    if (e.type === 'mousemove') {
+      lastPoints.push([(e as MouseEvent).clientX, (e as MouseEvent).clientY]);
+    } else {
+      lastPoints.push([(e as TouchEvent).touches[0].clientX, (e as TouchEvent).touches[0].clientY]);
+    }
+
     const ctx = canvasRef.current.getContext('2d');
     const strokes = getStroke(lastPoints, { ...defaultOptions, ...options });
     const path = getSvgPathFromStroke(strokes);
@@ -65,18 +70,29 @@ export const useFreehand = (
   };
 
   const handleRegisterEventListener = (): any => {
-    console.log('registering event listener', canvasRef.current);
     if (!canvasRef.current) return setTimeout(handleRegisterEventListener, 200);
+
+    const parent = canvasRef.current.parentElement;
+    if (parent.style.overflow !== 'hidden') console.warn("canvas parent overflow should be 'hidden'");
+    if (parent.style.touchAction !== 'none') console.warn("canvas parent touchAction should be 'none'");
 
     canvasRef.current.addEventListener('mousedown', handleMouseDown);
     canvasRef.current.addEventListener('mousemove', handleMouseMove.bind(this));
     canvasRef.current.addEventListener('mouseup', handleMouseUp);
+
+    canvasRef.current.addEventListener('touchstart', handleMouseDown);
+    canvasRef.current.addEventListener('touchmove', handleMouseMove.bind(this));
+    canvasRef.current.addEventListener('touchend', handleMouseUp);
   };
 
   const handleUnregisterEventListener = () => {
     canvasRef.current.removeEventListener('mousedown', handleMouseDown);
     canvasRef.current.removeEventListener('mousemove', handleMouseMove.bind(this));
     canvasRef.current.removeEventListener('mouseup', handleMouseUp);
+
+    canvasRef.current.removeEventListener('touchstart', handleMouseDown);
+    canvasRef.current.removeEventListener('touchmove', handleMouseMove.bind(this));
+    canvasRef.current.removeEventListener('touchend', handleMouseUp);
   };
 
   const reset = (): void => {
