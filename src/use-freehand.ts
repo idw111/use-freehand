@@ -52,11 +52,13 @@ export const useFreehand = (
   const handleMouseMove = (e: MouseEvent | TouchEvent) => {
     if (mouseStateRef.current === 'up') return;
 
+    const offsetX = (e.target as HTMLElement).offsetLeft;
+    const offsetY = (e.target as HTMLElement).offsetTop;
     const lastPoints = pointsRef.current[pointsRef.current.length - 1];
     if (e.type === 'mousemove') {
-      lastPoints.push([(e as MouseEvent).clientX, (e as MouseEvent).clientY]);
+      lastPoints.push([(e as MouseEvent).clientX - offsetX, (e as MouseEvent).clientY - offsetY]);
     } else {
-      lastPoints.push([(e as TouchEvent).touches[0].clientX, (e as TouchEvent).touches[0].clientY]);
+      lastPoints.push([(e as TouchEvent).touches[0].clientX - offsetX, (e as TouchEvent).touches[0].clientY - offsetY]);
     }
 
     const ctx = canvasRef.current.getContext('2d');
@@ -86,6 +88,8 @@ export const useFreehand = (
   };
 
   const handleUnregisterEventListener = () => {
+    if (!canvasRef.current) return;
+
     canvasRef.current.removeEventListener('mousedown', handleMouseDown);
     canvasRef.current.removeEventListener('mousemove', handleMouseMove.bind(this));
     canvasRef.current.removeEventListener('mouseup', handleMouseUp);
@@ -96,12 +100,14 @@ export const useFreehand = (
   };
 
   const reset = (): void => {
+    if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext('2d');
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     pointsRef.current = [];
   };
 
   const capture = async (): Promise<Blob> => {
+    if (!canvasRef.current) return;
     const minX = Math.min(...pointsRef.current.map((points) => Math.min(...points.map((p) => p[0]))));
     const minY = Math.min(...pointsRef.current.map((points) => Math.min(...points.map((p) => p[1]))));
     const maxX = Math.max(...pointsRef.current.map((points) => Math.max(...points.map((p) => p[0]))));
