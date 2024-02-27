@@ -56,8 +56,10 @@ export const useFreehand = (
     const offsetY = (e.target as HTMLElement).offsetTop;
     const lastPoints = pointsRef.current[pointsRef.current.length - 1];
     if (e.type === 'mousemove') {
+      console.log(e.type, (e as MouseEvent).clientX - offsetX, (e as MouseEvent).clientY - offsetY);
       lastPoints.push([(e as MouseEvent).clientX - offsetX, (e as MouseEvent).clientY - offsetY]);
     } else {
+      console.log(e.type, (e as TouchEvent).touches[0].clientX - offsetX, (e as TouchEvent).touches[0].clientY - offsetY);
       lastPoints.push([(e as TouchEvent).touches[0].clientX - offsetX, (e as TouchEvent).touches[0].clientY - offsetY]);
     }
 

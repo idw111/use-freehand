@@ -7,7 +7,11 @@ import { useFreehand } from '../dist/esm/use-freehand';
 const ExampleComponent: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { capture, reset } = useFreehand(canvasRef);
-  return <canvas ref={canvasRef} width={600} height={400} style={{ border: 'solid 1px #ccc' }} />;
+  return (
+    <div style={{ padding: '120px 300px' }}>
+      <canvas ref={canvasRef} width={600} height={400} style={{ border: 'solid 1px #ccc', marginTop: 100 }} />
+    </div>
+  );
 };
 
 window.onload = () => {

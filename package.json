@@ -1,6 +1,6 @@
 {
   "name": "use-freehand",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "",
   "main": "./src/index.ts",
   "types": "dist/types/index.d.ts",
