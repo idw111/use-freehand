@@ -52,8 +52,9 @@ export const useFreehand = (
   const handleMouseMove = (e: MouseEvent | TouchEvent) => {
     if (mouseStateRef.current === 'up') return;
 
-    const offsetX = (e.target as HTMLElement).offsetLeft;
-    const offsetY = (e.target as HTMLElement).offsetTop;
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    const offsetX = rect.x;
+    const offsetY = rect.y;
     const lastPoints = pointsRef.current[pointsRef.current.length - 1];
     if (e.type === 'mousemove') {
       console.log(e.type, (e as MouseEvent).clientX - offsetX, (e as MouseEvent).clientY - offsetY);
